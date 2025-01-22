@@ -4,12 +4,10 @@ const  cookieParser = require("cookie-parser");
 const cors = require('cors');
 
 const app = express();
-app.use(
-  cors({
-    origin:"https://dev-connect-liard.vercel.app",
-    credentials:true
-  }
-);
+app.use(cors({
+  origin: 'https://dev-connect-pi.vercel.app', 
+  credentials: true, 
+}));
 app.use(express.json());
 app.use(cookieParser());
 
