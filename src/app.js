@@ -5,7 +5,10 @@ const cors = require('cors');
 
 const app = express();
 app.use(
-  cors()
+  cors({
+    origin:"https://dev-connect-liard.vercel.app",
+    credentials:true
+  }
 );
 app.use(express.json());
 app.use(cookieParser());
