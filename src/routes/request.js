@@ -11,9 +11,11 @@ requestRouter.post("/request/send/:status/:touserId", userAuth, async (req, res)
         const toUserId = req.params.touserId;
         const status = req.params.status;
 
-        const allowedStatus = ["ignored", "interested"];
+        const allowedStatus = ["ignore", "interested"];
         if (!allowedStatus.includes(status)) {
-            return res.status(400).json({ message: "Invalid connection status: " + status });
+          return res
+            .status(400)
+            .json({ message: "Invalid connection status: " + status });
         }
 
         const touser = await userModel.findById(toUserId);
