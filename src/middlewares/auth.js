@@ -1,5 +1,6 @@
 const  jwt = require("jsonwebtoken");
 const userModel = require("../model/user");
+require("dotenv").config();
 
 
 const userAuth = async (req, res, next) => {
@@ -10,7 +11,7 @@ const userAuth = async (req, res, next) => {
             return res.status(401).send("Unauthorized: No token provided");
         }
 
-        const decodedMessage = await jwt.verify(token, "DEV@connect22");
+        const decodedMessage = await jwt.verify(token, process.env.JWT_SECRET);
         const { _id } = decodedMessage;
         const user = await userModel.findById(_id);
 
