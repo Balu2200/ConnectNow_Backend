@@ -1,24 +1,37 @@
 const socket = require("socket.io");
+const crypto = require("crypto");
 
-
-
-const initilizeSocket = (server) =>{
-
-    const io = socket(server, {
-      cors: {
-        origin: "http://localhost:5173",
-      },
-    });
-
-
-    io.on("connection", (socket) => {
-
-        socket.on("joinChat", () =>{});
-        socket.on("sendMessage", () =>{});
-        socket.on("disconnect", () =>{});
-
-        
-    });
+const getSecretRoomId = (userId, targetUserId) =>{
+  return crypto.createHash("sha256").update([userId, targetUserId].sort().join("_")).digest("hex");
 }
 
-module.exports = initilizeSocket;   
+
+const initializeSocket = (server) => {
+  const io = socket(server, {
+    cors: {
+      origin: process.env.CLIENT_URL || "http://localhost:5173",
+    },
+  });
+
+  io.on("connection", (socket) => {
+    console.log(`User connected: ${socket.id}`);
+
+    socket.on("joinChat", ({ userId, targetUserId }) => {
+      const roomId = getSecretRoomId(userId,targetUserId);
+      socket.join(roomId);
+      console.log(`User ${userId} joined room: ${roomId}`);
+    });
+
+    socket.on("sendMessage", ({ firstName, userId, targetUserId, text }) => {
+      const roomId = getSecretRoomId(userId,targetUserId);
+      io.to(roomId).emit("messageReceived", { firstName, text });
+      console.log(`Message sent in ${roomId}: ${text}`);
+    });
+
+    socket.on("disconnect", () => {
+      console.log(`User disconnected: ${socket.id}`);
+    });
+  });
+};
+
+module.exports = initializeSocket;
