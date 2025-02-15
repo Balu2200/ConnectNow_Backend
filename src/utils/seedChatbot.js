@@ -1,18 +1,28 @@
 const mongoose = require("mongoose");
+require("dotenv").config(); 
 const chatbotModel = require("../model/chatbot");
 
-mongoose.connect(process.env.MONGODB_CONNECTION);
+console.log("Connecting to MongoDB...");
+console.log("MongoDB Connection String:", process.env.MONGODB_CONNECTION);
+
+mongoose
+  .connect(process.env.MONGODB_CONNECTION)
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  });
 
 const seedData = [
   {
     question: "I want to check my connections",
     response:
-      "You can check your connections under connections  tab by clicking on profile image",
+      "You can check your connections under connections tab by clicking on profile image",
   },
   {
     question: "I want to check my connection request",
     response:
-      "You can check your connections request under request  tab by clicking on profile image",
+      "You can check your connection requests under request tab by clicking on profile image",
   },
   {
     question: "customer support",
@@ -41,10 +51,17 @@ const seedData = [
   },
 ];
 
-const seedDb = async() =>{
+const seedDb = async () => {
+  try {
+    console.log("Seeding chatbot responses...");
     await chatbotModel.insertMany(seedData);
-    console.log("Chatbot response added");
+    console.log("Chatbot response added successfully!");
+  } catch (error) {
+    console.error("Error seeding chatbot responses:", error);
+  } finally {
     mongoose.connection.close();
-}
+    console.log("Database connection closed.");
+  }
+};
 
 seedDb();
