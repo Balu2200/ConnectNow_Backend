@@ -50,7 +50,6 @@ userRouter.get("/user/connections", userAuth , async(req, res) =>{
     }
 });
 
-
 userRouter.get("/feed", userAuth, async(req, res)=>{
 
     try{
