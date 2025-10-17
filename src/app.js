@@ -10,8 +10,8 @@ const http = require("http");
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    credentials:true
+    origin: "https://connect-now-frontend.vercel.app",
+    credentials: true,
   })
 );
 app.use(express.json());
