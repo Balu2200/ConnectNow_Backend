@@ -18,7 +18,7 @@ const validateSignUpData = (req) => {
     }
 
     // Validate password strength (minimum 8 characters, at least one number and one letter)
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
     if (!passwordRegex.test(password)) {
         throw new Error("Password must be at least 8 characters long and contain at least one letter and one number");
     }
