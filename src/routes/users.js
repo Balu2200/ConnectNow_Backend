@@ -73,13 +73,23 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         "about",
       ]);
 
-    const data = connections.map((row) => {
-      if (row.fromUserId._id.equals(loggedInUser._id)) {
-        return row.toUserId;
-      } else {
-        return row.fromUserId;
-      }
-    });
+    // Filter out any records where either side failed to populate (e.g., user was deleted)
+    const data = [];
+    for (const row of connections) {
+      const fromDoc = row?.fromUserId;
+      const toDoc = row?.toUserId;
+      // Skip if either user ref is missing
+      if (!fromDoc || !toDoc || !fromDoc._id || !toDoc._id) continue;
+
+      const isFromMe =
+        typeof fromDoc._id.equals === "function"
+          ? fromDoc._id.equals(loggedInUser._id)
+          : String(fromDoc._id) === String(loggedInUser._id);
+
+      const otherUser = isFromMe ? toDoc : fromDoc;
+      if (!otherUser || !otherUser._id) continue;
+      data.push(otherUser);
+    }
 
     res.json({ message: "Connections fetched successfully", Data: data });
   } catch (err) {
