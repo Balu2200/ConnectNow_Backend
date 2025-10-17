@@ -1,7 +1,7 @@
 const express = require("express");
 const {userAuth} = require("../middlewares/auth");
 const chatbotModel = require("../model/chatbot");
-const { generateAnswer } = require("./utils/chatbotservice");
+const { generateAnswer } = require("../utils/chatbotservice");
 
 const chatbotRouter = express.Router();
 
