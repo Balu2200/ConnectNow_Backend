@@ -2,7 +2,7 @@ const { PromptTemplate } = require("@langchain/core/prompts");
 const { llm } = require("../config/llm.js");
 
 const template = `
-You are a helpful chatbot for a platform called XYZ.
+You are a helpful chatbot for a platform called ConnectNow.
 Answer user questions clearly using platform knowledge.
 
 Question: {question}
