@@ -8,7 +8,6 @@ const http = require("http");
 const app = express();
 app.use(
   cors({
-    // Allow credentials (cookies) from the frontend. Support both prod and local dev.
     origin: [
       process.env.CLIENT_URL || "http://localhost:5173",
       "https://connect-now-frontend.vercel.app",

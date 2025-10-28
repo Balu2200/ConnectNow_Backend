@@ -73,12 +73,12 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
         "about",
       ]);
 
-    // Filter out any records where either side failed to populate (e.g., user was deleted)
+
     const data = [];
     for (const row of connections) {
       const fromDoc = row?.fromUserId;
       const toDoc = row?.toUserId;
-      // Skip if either user ref is missing
+  
       if (!fromDoc || !toDoc || !fromDoc._id || !toDoc._id) continue;
 
       const isFromMe =
@@ -105,17 +105,15 @@ userRouter.get("/feed", userAuth, async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 10;
     const skip = (page - 1) * limit;
 
-    // Fetch all requests involving current user
     const relatedRequests = await connectionRequestModel
       .find({
         $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
       })
       .select("fromUserId toUserId status createdAt");
 
-    // Build sets/maps for filtering and annotation
     const hideStatuses = new Set(["accepted", "rejected", "ignore"]);
     const hideUserIds = new Set();
-    const reqMap = new Map(); // only interested (pending)
+    const reqMap = new Map(); 
 
     for (const r of relatedRequests) {
       const from = r.fromUserId.toString();
@@ -134,7 +132,6 @@ userRouter.get("/feed", userAuth, async (req, res) => {
       }
     }
 
-    // Query users excluding hidden and self, with pagination
     const users = await userModel
       .find({
         _id: { $ne: loggedInUser._id, $nin: Array.from(hideUserIds) },

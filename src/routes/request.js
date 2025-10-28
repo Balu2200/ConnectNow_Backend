@@ -90,7 +90,7 @@ requestRouter.post(
     }
   }
 );
-// Withdraw an outgoing pending request (status: interested)
+
 requestRouter.delete(
   "/request/withdraw/:toUserId",
   userAuth,

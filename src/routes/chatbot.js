@@ -9,18 +9,12 @@ chatbotRouter.post("/chatbot/message", userAuth, async (req, res) => {
   try {
     const { question } = req.body;
     const query = question.toLowerCase().trim();
-
-    // Check if we already have this question in the database
     const existing = await chatbotModel.findOne({ question: query });
 
     if (existing) {
       return res.json({ response: existing.response });
     }
-
-    // Otherwise, generate a new answer using LangChain + OpenAI
     const aiResponse = await generateAnswer(query);
-
-    // Save the Q&A to MongoDB for future reuse
     const newEntry = new chatbotModel({
       question: query,
       response: aiResponse,

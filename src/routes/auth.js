@@ -40,14 +40,13 @@ authRouter.post("/login", async (req, res) => {
     const isPasswordValid = await user.validatePassword(password);
     if (isPasswordValid) {
       const token = await user.getJWT();
-      // Configure cookie for cross-site usage (frontend hosted on different origin)
       const origin = req.headers.origin || "";
       const isLocal = /localhost|127\.0\.0\.1/.test(origin);
       const isProd = !isLocal;
 
       res.cookie("token", token, {
         httpOnly: true,
-        secure: isProd, // required for SameSite=None on modern browsers
+        secure: isProd, 
         sameSite: isProd ? "None" : "Lax",
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
