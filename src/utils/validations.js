@@ -4,19 +4,16 @@ const bcrypt = require("bcrypt");
 const validateSignUpData = (req) => {
   const { firstName, lastName, email, password } = req.body;
 
-  // Check if all required fields are present
   if (!firstName || !lastName || !email || !password) {
     throw new Error("All fields are required");
   }
 
-  // Validate email format
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     throw new Error("Invalid email format");
   }
 
-  // Validate password strength (minimum 8 characters, at least one number and one letter)
-  // Allow special characters for stronger passwords
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
   if (!passwordRegex.test(password)) {
     throw new Error(
@@ -24,7 +21,6 @@ const validateSignUpData = (req) => {
     );
   }
 
-  // Validate name fields (only letters and spaces)
   const nameRegex = /^[A-Za-z\s]{2,}$/;
   if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
     throw new Error(
